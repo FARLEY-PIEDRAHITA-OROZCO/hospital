@@ -6,12 +6,23 @@ if (!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 1) {
 }
 
 require '../includes/funciones.php';
+require_once('../../config/db.php');
 
-include('../../templates/header.php');
+
+// Obtener información del paciente
+$paciente_id = $_SESSION['user_id'];
+$stmt = $pdo->prepare("SELECT nombre_completo, tipo_documento, numero_documento FROM usuarios WHERE id = ?");
+$stmt->execute([$paciente_id]);
+$paciente = $stmt->fetch();
+
 
 $usuarios = obtenerUsuarios();
 $citas = obtenerTodasLasCitas();
+
+include('../../templates/header_admind.php');
+
 ?>
+<div class="info-paciente">
 <h1>Bienvenido, Administrador</h1>
 <p>Este es tu dashboard.</p>
 <div">
@@ -34,19 +45,15 @@ $citas = obtenerTodasLasCitas();
                         <td><?php echo $usuario['correo_electronico']; ?></td>
                         <td><?php echo $usuario['rol_id']; ?></td>
                         <td>
-                            <a href="edit_user.php?id=<?php echo $usuario['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="delete_user.php?id=<?php echo $usuario['id']; ?>" class="btn btn-sm btn-danger">Eliminar</a>
+                            <button><a href="edit_user.php?id=<?php echo $usuario['id']; ?>" class="btn btn-sm btn-warning">Editar</a></button>
+                            <button><a href="delete_user.php?id=<?php echo $usuario['id']; ?>" class="btn btn-sm btn-danger">Eliminar</a></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>        
-    </div>
-    <br>
 
-    <main class="mt-4">
-            <section>
+        <section>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -69,6 +76,13 @@ $citas = obtenerTodasLasCitas();
                 </table>
                 </div>
             </section>
-        </main>
+    </div>        
+    </div>
+    <br>
+
+    
+            
+            </div>
+
 <a href="../logout.php">Cerrar Sesión</a>
-<?php include('../../templates/footer.php'); ?>
+<?php include('../../templates/footer_admind.php'); ?>

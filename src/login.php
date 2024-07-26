@@ -17,5 +17,3 @@
             <p>¿No tienes una cuenta? <a href="../src/register.php">Regístrate</a></p>
         </div>
     </div>
-
-<?php include('../templates/footer.php'); ?>

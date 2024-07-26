@@ -5,7 +5,6 @@ if (!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 2) {
     exit();
 }
 include('../../config/db.php');
-include('../../templates/header.php');
 
 // Obtener información del paciente
 $paciente_id = $_SESSION['user_id'];
@@ -24,15 +23,27 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$paciente_id]);
 $citas = $stmt->fetchAll();
+
+include('../../templates/header_patient.php');
+
 ?>
+<div class="info-paciente">
+    <div class="info-header">
+        <h2>Información del Paciente</h2>
+    </div>
+    <div class="info-contenedor">
+        <div class="info-item">
+            <strong>Nombre completo:</strong> <?= $paciente['nombre_completo'] ?>
+        </div>
+        <div class="info-item">
+            <strong>Tipo de Documento:</strong> <?= $paciente['tipo_documento'] ?>
+        </div>
+        <div class="info-item">
+            <strong>Número de Documento:</strong> <?= $paciente['numero_documento'] ?>
+        </div>
+    </div>
 
-<h1>Historial Clínico</h1>
-<h2>Información del Paciente</h2>
-<p><strong>Nombre Completo:</strong> <?= $paciente['nombre_completo'] ?></p>
-<p><strong>Tipo de Documento:</strong> <?= $paciente['tipo_documento'] ?></p>
-<p><strong>Número de Documento:</strong> <?= $paciente['numero_documento'] ?></p>
-
-<h2>Citas Asistidas</h2>
+    <h2>Citas Asistidas</h2>
 <?php if (count($citas) > 0): ?>
     <table>
         <thead>
@@ -57,7 +68,14 @@ $citas = $stmt->fetchAll();
 <?php else: ?>
     <p>No tienes citas asistidas.</p>
 <?php endif; ?>
-<p><a href="download_history.php">Descargar Historial Clínico (PDF)</a></p>
-<p><a href="dashboard.php">Volver al Dashboard</a></p>
-<p><a href="../logout.php">Cerrar Sesión</a></p>
-<?php include('../../templates/footer.php'); ?>
+<div class="buttons">
+</div>
+  
+<button class="btn btn-primary btn-block"><a href="download_history.php">Descargar Historial Clínico (PDF)</a></button><br><br>
+<button class="btn btn-primary btn-block"><a href="dashboard.php">Volver al Dashboard</a></button> 
+</div>
+
+
+
+
+<?php include('../../templates/footer_patient.php'); ?>

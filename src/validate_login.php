@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../src/patient/dashboard.php");
                 break;
             case 3:
-                header("Location: ../src/doctor/dashboard.php");
+                header("Location: ../src/doctor/view_appointments.php");
                 break;
         }
         exit();

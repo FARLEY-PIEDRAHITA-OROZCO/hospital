@@ -7,6 +7,12 @@ if (!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 3) {
 
 require_once('../../config/db.php');
 
+// Obtener información del paciente
+$paciente_id = $_SESSION['user_id'];
+$stmt = $pdo->prepare("SELECT nombre_completo, tipo_documento, numero_documento FROM usuarios WHERE id = ?");
+$stmt->execute([$paciente_id]);
+$paciente = $stmt->fetch();
+
 // Obtener el ID del doctor
 $doctor_id = $_SESSION['user_id'];
 
@@ -21,16 +27,11 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$doctor_id]);
 $citas = $stmt->fetchAll();
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Doctor</title>
-    <link rel="stylesheet" href="../../public/styles.css">
-</head>
-<body>
+include('../../templates/header_admind.php');
+
+?>
+<div class="info-paciente">
     <h1>Dashboard Doctor</h1>
     <h2>Citas Agendadas</h2>
     <table border="1" cellpadding="10">
@@ -55,7 +56,8 @@ $citas = $stmt->fetchAll();
                     <td><?php echo htmlspecialchars($cita['estado']); ?></td>
                     <td>
                         <?php if ($cita['estado'] == 'pendiente de atender'): ?>
-                        <a href="start_consultation.php?cita_id=<?php echo $cita['id']; ?>">Iniciar Consulta</a>
+                            <button><a href="start_consultation.php?cita_id=<?php echo $cita['id']; ?>">Iniciar Consulta</a></button>
+                        
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -68,5 +70,6 @@ $citas = $stmt->fetchAll();
         </tbody>
     </table>
     <a href="../../public/index.php">Volver al inicio</a>
-</body>
-</html>
+    </div>
+
+<?php include('../../templates/footer_admind.php'); ?>

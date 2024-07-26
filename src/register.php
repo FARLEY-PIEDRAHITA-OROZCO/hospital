@@ -42,5 +42,3 @@
             <p>¿Ya tienes una cuenta? <a href="../src/login.php">Iniciar sesión</a></p>
         </div>
     </div>
-
-<?php include('../templates/footer.php'); ?>

@@ -7,6 +7,13 @@ if (!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 3) {
 
 require_once('../../config/db.php');
 
+// Obtener información del paciente
+$paciente_id = $_SESSION['user_id'];
+$stmt = $pdo->prepare("SELECT nombre_completo, tipo_documento, numero_documento FROM usuarios WHERE id = ?");
+$stmt->execute([$paciente_id]);
+$paciente = $stmt->fetch();
+
+
 // Obtener el ID de la cita desde el parámetro GET
 $cita_id = isset($_GET['cita_id']) ? $_GET['cita_id'] : null;
 
@@ -84,16 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: view_appointments.php");
     exit();
 }
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Iniciar Consulta</title>
-    <link rel="stylesheet" href="../../public/styles.css">
-</head>
-<body>
+include('../../templates/header_admind.php');
+
+?>
+<div class="info-paciente">
+
     <h1>Iniciar Consulta</h1>
     <h2>Paciente: <?php echo htmlspecialchars($cita['paciente']); ?></h2>
     <h3>Tipo de Cita: <?php echo htmlspecialchars($cita['tipo_cita']); ?></h3>
@@ -129,10 +132,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     </select>
                     <input type="number" name="cantidades[]" placeholder="Cantidad" min="1" required>
+                    <button type="button" onclick="agregarMedicina()">Agregar Medicina</button>
                 </div>
             </div>
-            <button type="button" onclick="agregarMedicina()">Agregar Medicina</button>
         </div>
+        <br>
         <button type="submit">Finalizar Consulta</button>
     </form>
     <a href="view_appointments.php">Cancelar</a>
@@ -155,5 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             container.appendChild(newItem);
         }
     </script>
-</body>
-</html>
+</div>
+
+<?php include('../../templates/footer_admind.php'); ?>
+
